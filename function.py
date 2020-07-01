@@ -160,148 +160,248 @@ class Function(QMainWindow, Ui_MainWindow):
             return setup_content
         elif setup == "":
             self.msg_box("哥哥，第一个框框不能空到！！！")
-        else:
-            self.msg_box("哥哥，第一个框框一定要放“ !Setup.txt ”！！！")
 
-    # 文件内容修改方法
-    def version_manifest(self, files):
-        file = files
-        new_file = '%s.new' % (file)
-        f_new = open(new_file, mode='w', encoding='utf-8')
-        with open(file, mode='r', encoding='utf-8') as f:
-            old_str = f.readlines()
-            old_packageUrl = old_str[1]
-            old_remoteManifestUrl = old_str[2]
-            old_remoteVersionUrl = old_str[3]
-            old_serverUrl = old_str[4]
-            # print(old_packageUrl, old_remoteManifestUrl, old_remoteVersionUrl, old_serverUrl)
-            ip = self.IpChangeEdit.text()
-            New_packageUrl = ' "packageUrl": "http://{}/assets/", \n'.format(ip)
-            New_remoteManifestUrl = ' "remoteManifestUrl": "http://{}/project.manifest", \n'.format(ip)
-            New_remoteVersionUrl = ' "remoteVersionUrl": "http://{}/version.manifest", \n'.format(ip)
-            New_serverUrl = ' "serverUrl": "http://{}/", \n'.format(ip)
 
-            for line in old_str:
-                if old_packageUrl in line:
-                    line = line.replace(old_packageUrl, New_packageUrl, 1)
-                elif old_remoteManifestUrl in line:
-                    line = line.replace(old_remoteManifestUrl, New_remoteManifestUrl, 1)
-                elif old_remoteVersionUrl in line:
-                    line = line.replace(old_remoteVersionUrl, New_remoteVersionUrl, 1)
-                elif old_serverUrl in line:
-                    line = line.replace(old_serverUrl, New_serverUrl, 1)
-                f_new.write(line)
-            f.close()
-            f_new.close()
-            os.remove(file)
-            os.rename(new_file, file)
+# 文件内容修改方法
+def version_manifest(self, files):
+    file = files
+    new_file = '%s.new' % (file)
+    f_new = open(new_file, mode='w', encoding='utf-8')
+    with open(file, mode='r', encoding='utf-8') as f:
+        old_str = f.readlines()
+        old_packageUrl = old_str[1]
+        old_remoteManifestUrl = old_str[2]
+        old_remoteVersionUrl = old_str[3]
+        old_serverUrl = old_str[4]
+        # print(old_packageUrl, old_remoteManifestUrl, old_remoteVersionUrl, old_serverUrl)
+        ip = self.IpChangeEdit.text()
+        New_packageUrl = ' "packageUrl": "http://{}/assets/", \n'.format(ip)
+        New_remoteManifestUrl = ' "remoteManifestUrl": "http://{}/project.manifest", \n'.format(ip)
+        New_remoteVersionUrl = ' "remoteVersionUrl": "http://{}/version.manifest", \n'.format(ip)
+        New_serverUrl = ' "serverUrl": "http://{}/", \n'.format(ip)
 
-    # 同上
-    def Project_manifest(self, files):
-        file = files
-        new_file = '%s.new' % (file)
-        f_new = open(new_file, mode='w', encoding='utf-8')
-        with open(file, mode='r', encoding='utf-8') as f:
-            old_str = f.readlines()
-            old_packageUrl = old_str[9191]
-            old_remoteManifestUrl = old_str[9192]
-            old_remoteVersionUrl = old_str[9193]
-            old_serverUrl = old_str[9194]
-            # print(old_packageUrl, old_remoteManifestUrl, old_remoteVersionUrl, old_serverUrl)
-            ip = self.IpChangeEdit.text()
-            New_packageUrl = ' "packageUrl": "http://{}/assets/", \n'.format(ip)
-            New_remoteManifestUrl = ' "remoteManifestUrl": "http://{}/project.manifest", \n'.format(ip)
-            New_remoteVersionUrl = ' "remoteVersionUrl": "http://{}/version.manifest", \n'.format(ip)
-            New_serverUrl = ' "serverUrl": "http://{}/", \n'.format(ip)
+        for line in old_str:
+            if old_packageUrl in line:
+                line = line.replace(old_packageUrl, New_packageUrl, 1)
+            elif old_remoteManifestUrl in line:
+                line = line.replace(old_remoteManifestUrl, New_remoteManifestUrl, 1)
+            elif old_remoteVersionUrl in line:
+                line = line.replace(old_remoteVersionUrl, New_remoteVersionUrl, 1)
+            elif old_serverUrl in line:
+                line = line.replace(old_serverUrl, New_serverUrl, 1)
+            f_new.write(line)
+        f.close()
+        f_new.close()
+        os.remove(file)
+        os.rename(new_file, file)
 
-            for line in old_str:
-                if old_packageUrl in line:
-                    line = line.replace(old_packageUrl, New_packageUrl, 1)
-                elif old_remoteManifestUrl in line:
-                    line = line.replace(old_remoteManifestUrl, New_remoteManifestUrl, 1)
-                elif old_remoteVersionUrl in line:
-                    line = line.replace(old_remoteVersionUrl, New_remoteVersionUrl, 1)
-                elif old_serverUrl in line:
-                    line = line.replace(old_serverUrl, New_serverUrl, 1)
-                f_new.write(line)
-            f.close()
-            f_new.close()
-            os.remove(file)
-            os.rename(new_file, file)
 
-    def File_Change(self, files, New_serverName, New_IpAddress):
-        setup = self.SettingUp()
-        old_ServerName = setup[0]
-        old_IpAddress = setup[1]
-        file = files
-        new_file = "%s.new" % (file)
-        if "serverlist" in file:
-            f_new = open(new_file, mode='w', encoding='utf-8')
-        else:
-            f_new = open(new_file, mode='w', encoding='GB2312')
-        with open(file, mode='r', encoding='GB2312') as old_file:
-            old_str = old_file.readlines()
-            for content in old_str:
-                pattern_1 = re.compile(old_ServerName)
-                content = re.sub(pattern_1, New_serverName, content)
-                new_str = [content]
-                for new_content in new_str:
-                    pattern_2 = re.compile(old_IpAddress)
-                    new_text = re.sub(pattern_2, New_IpAddress, new_content)
-                    # print(new_text)
-                    f_new.write(new_text)
-            f_new.close()
-            old_file.close()
+# 同上
+def Project_manifest(self, files):
+    file = files
+    new_file = '%s.new' % (file)
+    f_new = open(new_file, mode='w', encoding='utf-8')
+    with open(file, mode='r', encoding='utf-8') as f:
+        old_str = f.readlines()
+        old_packageUrl = old_str[9191]
+        old_remoteManifestUrl = old_str[9192]
+        old_remoteVersionUrl = old_str[9193]
+        old_serverUrl = old_str[9194]
+        # print(old_packageUrl, old_remoteManifestUrl, old_remoteVersionUrl, old_serverUrl)
+        ip = self.IpChangeEdit.text()
+        New_packageUrl = ' "packageUrl": "http://{}/assets/", \n'.format(ip)
+        New_remoteManifestUrl = ' "remoteManifestUrl": "http://{}/project.manifest", \n'.format(ip)
+        New_remoteVersionUrl = ' "remoteVersionUrl": "http://{}/version.manifest", \n'.format(ip)
+        New_serverUrl = ' "serverUrl": "http://{}/", \n'.format(ip)
 
-    def MirGate_ini(self, files, New_IpAddress):
-        setup = self.SettingUp()
-        old_IpAddress = setup[1]
-        file = files
-        new_file = "%s.new" % (file)
-        f_new = open(new_file, mode='w', encoding='utf-8')
-        with open(file, mode='r', encoding='GB2312') as old_file:
-            old_str = old_file.readlines()
-            for content in old_str:
-                pattern_1 = re.compile(old_IpAddress)
-                content = re.sub(pattern_1, New_IpAddress, content)
-                f_new.write(content)
-            f_new.close()
-            old_file.close()
+        for line in old_str:
+            if old_packageUrl in line:
+                line = line.replace(old_packageUrl, New_packageUrl, 1)
+            elif old_remoteManifestUrl in line:
+                line = line.replace(old_remoteManifestUrl, New_remoteManifestUrl, 1)
+            elif old_remoteVersionUrl in line:
+                line = line.replace(old_remoteVersionUrl, New_remoteVersionUrl, 1)
+            elif old_serverUrl in line:
+                line = line.replace(old_serverUrl, New_serverUrl, 1)
+            f_new.write(line)
+        f.close()
+        f_new.close()
+        os.remove(file)
+        os.rename(new_file, file)
 
-    def All_File_Change(self):
-        files = self.file_list()
-        New_serverName = (self.NameEdit.text()).strip()
-        New_IpAddress = (self.IpChangeEdit.text()).strip()
-        for file in files:
+
+def Setup_txt(self, files):
+    setup = self.SettingUp()
+    old_ServerName = setup[0]
+    old_IpAddress = setup[1]
+    New_serverName = (self.NameEdit.text()).strip()
+    New_IpAddress = (self.IpChangeEdit.text()).strip()
+    file = files
+    new_file = "%s.new" % (file)
+    f_new = open(new_file, mode='w', encoding='GB2312')
+    with open(file, mode='r', encoding='GB2312') as old_file:
+        old_str = old_file.readlines()
+        for content in old_str:
+            pattern_1 = re.compile(old_ServerName)
+            content = re.sub(pattern_1, New_serverName, content)
+            new_str = [content]
+            for new_content in new_str:
+                pattern_2 = re.compile(old_IpAddress)
+                new_text = re.sub(pattern_2, New_IpAddress, new_content)
+                # print(new_text)
+                f_new.write(new_text)
+        f_new.close()
+        old_file.close()
+
+
+def DBService_ini(self, files):
+    setup = self.SettingUp()
+    old_ServerName = setup[0]
+    old_IpAddress = setup[1]
+    New_serverName = (self.NameEdit.text()).strip()
+    New_IpAddress = (self.IpChangeEdit.text()).strip()
+    file = files
+    new_file = "%s.new" % (file)
+    f_new = open(new_file, mode='w', encoding='GB2312')
+    with open(file, mode='r', encoding='GB2312') as old_file:
+        old_str = old_file.readlines()
+        for content in old_str:
+            pattern_1 = re.compile(old_ServerName)
+            content = re.sub(pattern_1, New_serverName, content)
+            new_str = [content]
+            for new_content in new_str:
+                pattern_2 = re.compile(old_IpAddress)
+                new_text = re.sub(pattern_2, New_IpAddress, new_content)
+                # print(new_text)
+                f_new.write(new_text)
+        f_new.close()
+        old_file.close()
+
+
+def LoginGate_ini(self, files):
+    setup = self.SettingUp()
+    old_ServerName = setup[0]
+    old_IpAddress = setup[1]
+    New_serverName = (self.NameEdit.text()).strip()
+    New_IpAddress = (self.IpChangeEdit.text()).strip()
+    file = files
+    new_file = "%s.new" % (file)
+    f_new = open(new_file, mode='w', encoding='ANSI')
+    with open(file, mode='r', encoding='ANSI') as old_file:
+        old_str = old_file.readlines()
+        for content in old_str:
+            pattern_1 = re.compile(old_ServerName)
+            content = re.sub(pattern_1, New_serverName, content)
+            new_str = [content]
+            for new_content in new_str:
+                pattern_2 = re.compile(old_IpAddress)
+                new_text = re.sub(pattern_2, New_IpAddress, new_content)
+                # print(new_text)
+                f_new.write(new_text)
+        f_new.close()
+        old_file.close()
+
+
+def serverlist_json(self, files):
+    setup = self.SettingUp()
+    old_ServerName = setup[0]
+    old_IpAddress = setup[1]
+    New_serverName = (self.NameEdit.text()).strip()
+    New_IpAddress = (self.IpChangeEdit.text()).strip()
+    file = files
+    new_file = "%s.new" % (file)
+    f_new = open(new_file, mode='w', encoding='utf-8')
+    with open(file, mode='r', encoding='utf-8') as old_file:
+        old_str = old_file.readlines()
+        for content in old_str:
+            pattern_1 = re.compile(old_ServerName)
+            content = re.sub(pattern_1, New_serverName, content)
+            new_str = [content]
+            for new_content in new_str:
+                pattern_2 = re.compile(old_IpAddress)
+                new_text = re.sub(pattern_2, New_IpAddress, new_content)
+                # print(new_text)
+                f_new.write(new_text)
+        f_new.close()
+        old_file.close()
+
+
+def serverlist_lua(self, files):
+    setup = self.SettingUp()
+    old_ServerName = setup[0]
+    old_IpAddress = setup[1]
+    New_serverName = (self.NameEdit.text()).strip()
+    New_IpAddress = (self.IpChangeEdit.text()).strip()
+    file = files
+    new_file = "%s.new" % (file)
+    f_new = open(new_file, mode='w', encoding='utf-8')
+    with open(file, mode='r', encoding='utf-8') as old_file:
+        old_str = old_file.readlines()
+        for content in old_str:
+            pattern_1 = re.compile(old_ServerName)
+            content = re.sub(pattern_1, New_serverName, content)
+            new_str = [content]
+            for new_content in new_str:
+                pattern_2 = re.compile(old_IpAddress)
+                new_text = re.sub(pattern_2, New_IpAddress, new_content)
+                # print(new_text)
+                f_new.write(new_text)
+        f_new.close()
+        old_file.close()
+
+
+def MirGate_ini(self, files):
+    setup = self.SettingUp()
+    old_IpAddress = setup[1]
+    New_IpAddress = (self.IpChangeEdit.text()).strip()
+    file = files
+    new_file = "%s.new" % (file)
+    f_new = open(new_file, mode='w', encoding='utf-8')
+    with open(file, mode='r', encoding='utf-8') as old_file:
+        old_str = old_file.readlines()
+        for content in old_str:
+            pattern_1 = re.compile(old_IpAddress)
+            content = re.sub(pattern_1, New_IpAddress, content)
+            f_new.write(content)
+        f_new.close()
+        old_file.close()
+
+
+def All_File_Change(self):
+    files = self.file_list()
+    for file in files:
+        try:
             if "DBService.ini" in file:
-                self.File_Change(file, New_serverName, New_IpAddress)
+                self.DBService_ini(file)
             elif "LoginGate.ini" in file:
-                self.File_Change(file, New_serverName, New_IpAddress)
+                self.LoginGate_ini(file)
             elif "serverlist.json" in file:
-                self.File_Change(file, New_serverName, New_IpAddress)
+                self.serverlist_json(file)
             elif "serverlist.lua" in file:
-                self.File_Change(file, New_serverName, New_IpAddress)
+                self.serverlist_lua(file)
             elif "MirGate.ini" in file:
-                self.MirGate_ini(file, New_IpAddress)
+                self.MirGate_ini(file)
             elif "project.manifest" in file:
                 self.Project_manifest(file)
             elif "version.manifest" in file:
                 self.version_manifest(file)
-            elif "Setup.txt" in file:
-                self.File_Change(file, New_serverName, New_IpAddress)
+            elif "!Setup.txt" in file:
+                self.Setup_txt(file)
+        except:
+            self.msg_box("哥哥，文件的路径好像不对呀！！！")
 
 
-    # IP修改方法
-    def ChangeBtn(self):
-        self.DirRecord()
-        if (self.NameEdit.text() and self.IpChangeEdit.text()) != '':
-            self.All_File_Change()
-            self.IpChangeBtn.setText("修改成功")
+# IP修改方法
+def ChangeBtn(self):
+    self.DirRecord()
+    if (self.NameEdit.text() and self.IpChangeEdit.text()) != '':
+        self.All_File_Change()
+        self.IpChangeBtn.setText("修改成功")
 
-        elif (self.NameEdit.text() == '') and (self.IpChangeEdit.text() == ''):
-            msg1 = '哥哥，都是空滴，改不了呢！！！'
-            self.msg_box(msg1)
+    elif (self.NameEdit.text() == '') and (self.IpChangeEdit.text() == ''):
+        msg1 = '哥哥，都是空滴，改不了呢！！！'
+        self.msg_box(msg1)
 
-        elif (self.NameEdit.text() == '') or (self.IpChangeEdit.text() == ''):
-            msg2 = '哥哥，服务器名或IP有一个没填呀！！！'
-            self.msg_box(msg2)
+    elif (self.NameEdit.text() == '') or (self.IpChangeEdit.text() == ''):
+        msg2 = '哥哥，服务器名或IP有一个没填呀！！！'
+        self.msg_box(msg2)
