@@ -2,7 +2,7 @@
 from PyQt5.QtWidgets import QFileDialog, QMainWindow, QMessageBox, QApplication
 from PyQt5.QtCore import QSettings, QTimer
 from view import Ui_MainWindow
-import os
+import os, re
 
 
 class Function(QMainWindow, Ui_MainWindow):
@@ -150,7 +150,7 @@ class Function(QMainWindow, Ui_MainWindow):
     def SettingUp(self):
         files = self.file_list()
         setup = files[0]
-        if "!setup.txt" in setup:
+        if "!Setup.txt" in setup:
             with open(setup, mode='r', encoding='GB2312') as setup_F:
                 all_str = setup_F.readlines()
                 old_serverName = ((all_str[2])[11:]).strip()
@@ -229,21 +229,74 @@ class Function(QMainWindow, Ui_MainWindow):
             os.remove(file)
             os.rename(new_file, file)
 
-    def All_File_Change(self):
-        files = self.file_list()
+    def File_Change(self, files, New_serverName, New_IpAddress):
         setup = self.SettingUp()
         old_ServerName = setup[0]
-        old_ipAddress = setup[1]
+        old_IpAddress = setup[1]
+        file = files
+        new_file = "%s.new" % (file)
+        if "serverlist" in file:
+            f_new = open(new_file, mode='w', encoding='utf-8')
+        else:
+            f_new = open(new_file, mode='w', encoding='GB2312')
+        with open(file, mode='r', encoding='GB2312') as old_file:
+            old_str = old_file.readlines()
+            for content in old_str:
+                pattern_1 = re.compile(old_ServerName)
+                content = re.sub(pattern_1, New_serverName, content)
+                new_str = [content]
+                for new_content in new_str:
+                    pattern_2 = re.compile(old_IpAddress)
+                    new_text = re.sub(pattern_2, New_IpAddress, new_content)
+                    # print(new_text)
+                    f_new.write(new_text)
+            f_new.close()
+            old_file.close()
+
+    def MirGate_ini(self, files, New_IpAddress):
+        setup = self.SettingUp()
+        old_IpAddress = setup[1]
+        file = files
+        new_file = "%s.new" % (file)
+        f_new = open(new_file, mode='w', encoding='utf-8')
+        with open(file, mode='r', encoding='GB2312') as old_file:
+            old_str = old_file.readlines()
+            for content in old_str:
+                pattern_1 = re.compile(old_IpAddress)
+                content = re.sub(pattern_1, New_IpAddress, content)
+                f_new.write(content)
+            f_new.close()
+            old_file.close()
+
+    def All_File_Change(self):
+        files = self.file_list()
+        New_serverName = (self.NameEdit.text()).strip()
+        New_IpAddress = (self.IpChangeEdit.text()).strip()
         for file in files:
-            if 'DBService.ini' in file:
-                pass
+            if "DBService.ini" in file:
+                self.File_Change(file, New_serverName, New_IpAddress)
+            elif "LoginGate.ini" in file:
+                self.File_Change(file, New_serverName, New_IpAddress)
+            elif "serverlist.json" in file:
+                self.File_Change(file, New_serverName, New_IpAddress)
+            elif "serverlist.lua" in file:
+                self.File_Change(file, New_serverName, New_IpAddress)
+            elif "MirGate.ini" in file:
+                self.MirGate_ini(file, New_IpAddress)
+            elif "project.manifest" in file:
+                self.Project_manifest(file)
+            elif "version.manifest" in file:
+                self.version_manifest(file)
+            elif "Setup.txt" in file:
+                self.File_Change(file, New_serverName, New_IpAddress)
 
 
     # IP修改方法
     def ChangeBtn(self):
         self.DirRecord()
         if (self.NameEdit.text() and self.IpChangeEdit.text()) != '':
-            self.change_Function()
+            self.All_File_Change()
+            self.IpChangeBtn.setText("修改成功")
 
         elif (self.NameEdit.text() == '') and (self.IpChangeEdit.text() == ''):
             msg1 = '哥哥，都是空滴，改不了呢！！！'
