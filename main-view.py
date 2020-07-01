@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys, base64
-from PyQt5.QtCore import QTranslator
+from PyQt5.QtCore import QTranslator, QTimer
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtGui import QIcon, QPixmap
 from function import Function
@@ -30,7 +30,10 @@ class ShowFunc(Function):
         self.DirChoiceBtn_8.clicked.connect(self.SelectFile_8)
         self.DirChoiceBtn_9.clicked.connect(self.SelectFile_9)
         self.DirChoiceBtn_10.clicked.connect(self.SelectFile_10)
-        self.IpChangeBtn.clicked.connect(self.ChangeBtn)
+        self.time = QTimer()  # 初始化计时器
+        self.time.setInterval(6000)  # 设置计时器时间为6秒，一秒为1000毫秒
+        self.IpChangeBtn.clicked.connect(self.change_func)  # 按钮激活计时开始，修改按钮文本
+        self.time.timeout.connect(self.referch)  # 计时结束还原按钮文本
         self.pushButton.clicked.connect(self.clear_all)
         self.init_view_info()
 
@@ -48,6 +51,13 @@ class ShowFunc(Function):
         pixmap.loadFromData(chuanqi_image)
         return pixmap
 
+    def change_func(self):
+        self.ChangeBtn()
+        self.time.start()  # 计时开始
+
+    def referch(self):
+        self.time.stop()  # 计时结束
+        self.IpChangeBtn.setText('一键修改')
 
 
 # 汉化
